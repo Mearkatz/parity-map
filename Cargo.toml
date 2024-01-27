@@ -3,6 +3,7 @@ name = "parity-map"
 version = "0.1.0"
 edition = "2021"
 authors = ["beetle"]
+repository = "https://github.com/Mearkatz/parity-map"
 description = "For mapping integers based on their parity"
 license = "MIT"
 

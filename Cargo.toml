@@ -1,0 +1,20 @@
+[package]
+name = "parity-map"
+version = "0.1.0"
+edition = "2021"
+authors = ["beetle"]
+description = "For mapping integers based on their parity"
+license = "MIT"
+
+[lints.rust]
+missing_docs = "deny"
+
+[lints.clippy]
+enum_glob_use = "deny"
+pedantic = "deny"
+nursery = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+
+[dependencies]
+num = "0.4.1"

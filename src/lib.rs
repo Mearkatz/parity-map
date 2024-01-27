@@ -1,14 +1,13 @@
 //! For mapping integers based on their parity
 
-use num::{BigInt, BigUint, Integer};
+use num::Integer;
 use std::convert::identity;
 
 #[derive(Debug, Clone, Copy, Eq, PartialEq, Ord, PartialOrd, Hash)]
 /// Represents a number's parity (whether it is even or odd).
+#[allow(missing_docs)]
 pub enum Parity {
-    #[allow(missing_docs)]
     Even,
-    #[allow(missing_docs)]
     Odd,
 }
 
@@ -31,13 +30,13 @@ impl Parity {
 }
 
 /// Gives access to methods for mapping based on a number's parity.
-pub trait ParityMap: Sized + Clone {
+pub trait ParityMap: Sized {
     /// Returns the parity of `&self`
     fn parity(&self) -> Parity;
 
     /// Returns `odd(self)` if `self` is odd, else `even(self)`.
     #[must_use]
-    fn parity_map(self, odd: impl Fn(Self) -> Self, even: impl Fn(Self) -> Self) -> Self {
+    fn parity_map(self, odd: impl FnOnce(Self) -> Self, even: impl FnOnce(Self) -> Self) -> Self {
         match self.parity() {
             Parity::Even => even(self),
             Parity::Odd => odd(self),
@@ -48,39 +47,32 @@ pub trait ParityMap: Sized + Clone {
     #[must_use]
     fn parity_map_and_then<F>(
         self,
-        odd: impl Fn(Self) -> Self,
-        even: impl Fn(Self) -> Self,
-        after: impl Fn(Self) -> Self,
+        odd: impl FnOnce(Self) -> Self,
+        even: impl FnOnce(Self) -> Self,
+        after: impl FnOnce(Self) -> Self,
     ) -> Self {
         after(self.parity_map(odd, even))
     }
 
     /// Returns `f(self)` if `self` is even, else `self`.
     #[must_use]
-    fn map_even(self, f: impl Fn(Self) -> Self) -> Self {
+    fn map_even(self, f: impl FnOnce(Self) -> Self) -> Self {
         self.parity_map(identity, f)
     }
 
     /// Returns `f(self)` if `self` is odd, else `self`.
     #[must_use]
-    fn map_odd(self, f: impl Fn(Self) -> Self) -> Self {
+    fn map_odd(self, f: impl FnOnce(Self) -> Self) -> Self {
         self.parity_map(f, identity)
     }
 }
 
-macro_rules! impl_parity_map {
-    ($($t: ty),*) => {
-        $(
-        impl ParityMap for $t {
-            fn parity(&self) -> Parity {
-                if self.is_even() {
-                    Parity::Even
-                } else {
-                    Parity::Odd
-                }
-            }
-        })*
-    };
+impl<T: Integer> ParityMap for T {
+    fn parity(&self) -> Parity {
+        if self.is_even() {
+            Parity::Even
+        } else {
+            Parity::Odd
+        }
+    }
 }
-
-impl_parity_map!(u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize, BigInt, BigUint);

@@ -8,14 +8,15 @@ description = "For mapping integers based on their parity"
 license = "MIT"
 
 [lints.rust]
-missing_docs = "deny"
+missing_docs = { level = "deny", priority = -1 }
 
 [lints.clippy]
-enum_glob_use = "deny"
-pedantic = "deny"
-nursery = "deny"
-unwrap_used = "deny"
-expect_used = "deny"
+enum_glob_use = { level = "deny", priority = -2 }
+pedantic = { level = "deny", priority = -3 }
+nursery = { level = "deny", priority = -4 }
+unwrap_used = { level = "deny", priority = -5 }
+expect_used = { level = "deny", priority = -6 }
 
 [dependencies]
-num = "0.4.1"
+either = "1.13.0"
+num = "0.4.3"

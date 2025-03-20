@@ -1,1 +1,1 @@
-A simple crate for mapping integers based on their parity.
+A crate for mapping integers based on their parity.
